@@ -7,10 +7,10 @@ export class Strong extends BlockMarkableItem {
     }
 
     toHtml(st: Array<string>): void {
-        super.toHtmlSuper("<strong>", "</strong>", st);
+        super.toHtmlSuper('<strong>', '</strong>', st);
     }
 
     toMarkdown(st: Array<string>): void {
-        super.toMarkdownSuper("__", "__", st);
+        super.toMarkdownSuper('__', '__', st);
     }
 }

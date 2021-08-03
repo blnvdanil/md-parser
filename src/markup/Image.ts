@@ -10,11 +10,11 @@ export class Image implements BlockItem {
     }
 
     toHtml(st: Array<string>): void {
-        st.push("<img alt='");
+        st.push('<img alt=\'');
         st.push(this.name);
-        st.push("' src='");
+        st.push('\' src=\'');
         st.push(this.src);
-        st.push("'>");
+        st.push('\'>');
     }
 
     toMarkdown(st: Array<string>): void {

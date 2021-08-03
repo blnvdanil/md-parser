@@ -2,6 +2,7 @@ import {BlockItem} from "./BlockItem";
 
 export class Text implements BlockItem {
     private text: string;
+
     constructor(text: string) {
         this.text = text;
     }

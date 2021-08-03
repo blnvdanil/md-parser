@@ -7,10 +7,10 @@ export class Strikeout extends BlockMarkableItem {
     }
 
     toHtml(st: Array<string>): void {
-        super.toHtmlSuper("<s>", "</s>", st);
+        super.toHtmlSuper('<s>', '</s>', st);
     }
 
     toMarkdown(st: Array<string>): void {
-        super.toMarkdownSuper("~", "~", st);
+        super.toMarkdownSuper('~', '~', st);
     }
 }

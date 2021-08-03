@@ -8,10 +8,10 @@ export class Emphasis extends BlockMarkableItem {
     }
 
     toHtml(st: Array<string>): void {
-        super.toHtmlSuper("<em>", "</em>", st);
+        super.toHtmlSuper('<em>', '</em>', st);
     }
 
     toMarkdown(st: Array<string>): void {
-        super.toMarkdownSuper("*", "*", st);
+        super.toMarkdownSuper('*', '*', st);
     }
 }

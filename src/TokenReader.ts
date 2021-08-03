@@ -2,31 +2,31 @@ import {Token} from "./Token";
 import {Image} from "./markup/Image";
 
 export class TokenReader {
-    private source: string = "";
+    private readonly source: string = '';
 
     private pos: number = 0;
 
     private curToken: Token = Token.CODE;
 
-    private curStringToken: string = "";
+    private curStringToken: string = '';
 
-    private tags: string[] = ["**", "__", "--", "*", "_", "`", "!["];
+    private tags: string[] = ['**', '__', '--', '*', '_', '`', '!['];
 
-    private imgName: string = "";
+    private imgName: string = '';
 
-    private imgSrc: string = "";
+    private imgSrc: string = '';
 
     private strToToken = new Map([
-            ["**", Token.STRONG],
-            ["*", Token.EMPHASIS],
-            ["--", Token.STRIKEOUT],
-            ["`", Token.CODE],
-            ["_", Token._EMPHASIS],
-            ["__", Token.__STRONG],
-            ["![", Token.IMG]
-        ]);
+        ['**', Token.STRONG],
+        ['*', Token.EMPHASIS],
+        ['--', Token.STRIKEOUT],
+        ['`', Token.CODE],
+        ['_', Token._EMPHASIS],
+        ['__', Token.__STRONG],
+        ['![', Token.IMG]
+    ]);
 
-    private curTag: string = "";
+    private curTag: string = '';
 
     constructor(source: string) {
         this.source = source;
@@ -51,23 +51,23 @@ export class TokenReader {
         const start: number = this.pos;
         let mid: number;
         let end: number;
-        while (this.pos < this.source.length && !this.source.startsWith("](", this.pos)){
+        while (this.pos < this.source.length && !this.source.startsWith('](', this.pos)) {
             this.pos++;
         }
-        if (this.pos < this.source.length && this.source.startsWith("](", this.pos)){
+        if (this.pos < this.source.length && this.source.startsWith('](', this.pos)) {
             mid = this.pos;
-            while (this.pos < this.source.length && !this.source.startsWith(")", this.pos)){
+            while (this.pos < this.source.length && !this.source.startsWith(')', this.pos)) {
                 this.pos++;
             }
-            if (this.pos < this.source.length && this.source.startsWith(")", this.pos)){
+            if (this.pos < this.source.length && this.source.startsWith(')', this.pos)) {
                 end = this.pos;
                 this.imgName = this.source.substring(start, mid);
-                this.imgSrc = this.source.substring(mid+2, end);
+                this.imgSrc = this.source.substring(mid + 2, end);
                 this.pos++;
                 return;
             }
         }
-        throw "atata";
+        throw 'atata';
     }
 
     public getImg(): Image {
@@ -84,7 +84,7 @@ export class TokenReader {
             const temp = this.strToToken.get(this.curTag);
             this.curToken = temp === undefined ? Token.CODE : temp;
             this.pos += this.curTag.length;
-            if (this.curToken == Token.IMG){
+            if (this.curToken == Token.IMG) {
                 this.parseImg();
             }
             return this.curToken;
@@ -95,11 +95,11 @@ export class TokenReader {
         while (this.pos < this.source.length && !this.checkTag()) {
             const ch: string = this.source.charAt(this.pos++);
             if (ch == '<') {
-                sb.push("&lt;");
+                sb.push('&lt;');
             } else if (ch == '>') {
-                sb.push("&gt;");
+                sb.push('&gt;');
             } else if (ch == '&') {
-                sb.push("&amp;");
+                sb.push('&amp;');
             } else if (ch == '\\' && this.pos < this.source.length && (this.test('*') || this.test('_'))) {
                 sb.push(this.source.charAt(this.pos++));
             } else {
@@ -109,7 +109,7 @@ export class TokenReader {
 
         this.curToken = Token.TEXT;
 
-        this.curStringToken = sb.join("");
+        this.curStringToken = sb.join('');
 
         return this.curToken;
     }

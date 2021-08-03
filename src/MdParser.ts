@@ -13,16 +13,16 @@ import {Code} from "./markup/Code";
 
 
 export class MdParser extends BaseParser {
-    private source: Array<string>;
-    private curElem: string = "";
-    private curLine: string | null = "";
-    private headerStarts = ["###### ", "##### ", "#### ", "### ", "## ", "# "];
+    private readonly source: Array<string>;
+    private curElem: string = '';
+    private curLine: string | null = '';
+    private headerStarts = ['###### ', '##### ', '#### ', '### ', '## ', '# '];
 
     private hLevel: number = 0;
 
     constructor(data: string) {
         super();
-        this.source = data.split("\n");
+        this.source = data.split('\n');
         console.log(this.source);
     }
 
@@ -90,32 +90,32 @@ export class MdParser extends BaseParser {
             this.nextToken();
             return temp;
         } else {
-            throw "Unclosed tag! expected " + start + "found " + this.curToken;
+            throw 'Unclosed tag! expected ' + start + 'found ' + this.curToken;
         }
     }
 
     private tokenToString(token: Token): string {
         switch (token) {
             case Token.STRIKEOUT: {
-                return "--";
+                return '--';
             }
             case Token.STRONG: {
-                return "**";
+                return '**';
             }
             case Token.__STRONG: {
-                return "__";
+                return '__';
             }
             case Token.EMPHASIS: {
-                return "*";
+                return '*';
             }
             case Token._EMPHASIS: {
-                return "_";
+                return '_';
             }
             case Token.CODE: {
-                return "`";
+                return '`';
             }
             default: {
-                throw "atata";
+                throw 'atata';
             }
         }
     }
@@ -141,7 +141,7 @@ export class MdParser extends BaseParser {
                 return [new Code(ans)];
             }
             default: {
-                throw "atata";
+                throw 'atata';
             }
         }
     }
@@ -149,7 +149,7 @@ export class MdParser extends BaseParser {
 
     private skipEmpties(): void {
         this.curLine = this.next();
-        while (this.curLine !== null && this.curLine === "") {
+        while (this.curLine !== null && this.curLine === '') {
             this.curLine = this.next();
         }
     }
@@ -162,17 +162,17 @@ export class MdParser extends BaseParser {
         const elem = new Array<string>();
         elem.push(this.curLine);
         this.curLine = this.next();
-        while (this.curLine !== null && this.curLine !== "") {
-            elem.push("\n");
+        while (this.curLine !== null && this.curLine !== '') {
+            elem.push('\n');
             elem.push(this.curLine);
             this.curLine = this.next();
         }
-        this.curElem = elem.join("");
+        this.curElem = elem.join('');
         return true;
     }
 
     next(): string | null {
-        const exp =  this.source.length === 0 ? null : this.source.shift();
+        const exp = this.source.length === 0 ? null : this.source.shift();
         if (exp !== undefined) {
             return exp
         }
