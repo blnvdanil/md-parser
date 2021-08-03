@@ -1,15 +1,15 @@
-import {BaseParser} from './BaseParser';
-import {Markable} from './markup/Markable';
-import {TokenReader} from './TokenReader';
-import {Paragraph} from './markup/Paragraph';
-import {Header} from './markup/Header';
-import {Token} from './Token';
-import {BlockItem} from './markup/BlockItem';
-import {Text} from './markup/Text';
-import {Strikeout} from './markup/Strikeout';
-import {Strong} from './markup/Strong';
-import {Emphasis} from './markup/Emphasis';
-import {Code} from './markup/Code';
+import { BaseParser } from './BaseParser';
+import { Markable } from './markup/Markable';
+import { TokenReader } from './TokenReader';
+import { Paragraph } from './markup/Paragraph';
+import { Header } from './markup/Header';
+import { Token } from './Token';
+import { BlockItem } from './markup/BlockItem';
+import { Text } from './markup/Text';
+import { Strikeout } from './markup/Strikeout';
+import { Strong } from './markup/Strong';
+import { Emphasis } from './markup/Emphasis';
+import { Code } from './markup/Code';
 
 
 export class MdParser extends BaseParser {
@@ -146,7 +146,6 @@ export class MdParser extends BaseParser {
     }
   }
 
-
   private skipEmpties(): void {
     this.curLine = this.next();
     while (this.curLine !== null && this.curLine === '') {
@@ -174,7 +173,7 @@ export class MdParser extends BaseParser {
   next(): string | null {
     const exp = this.source.length === 0 ? null : this.source.shift();
     if (exp !== undefined) {
-      return exp
+      return exp;
     }
     return null;
   }
@@ -188,6 +187,5 @@ export class MdParser extends BaseParser {
     }
     return true;
   }
-
 
 }

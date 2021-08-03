@@ -1,5 +1,5 @@
-import {Token} from './Token';
-import {Image} from './markup/Image';
+import { Token } from './Token';
+import { Image } from './markup/Image';
 
 export class TokenReader {
   private readonly source: string = '';
@@ -23,7 +23,7 @@ export class TokenReader {
     ['`', Token.CODE],
     ['_', Token._EMPHASIS],
     ['__', Token.__STRONG],
-    ['![', Token.IMG]
+    ['![', Token.IMG],
   ]);
 
   private curTag: string = '';
@@ -51,7 +51,8 @@ export class TokenReader {
     const start: number = this.pos;
     let mid: number;
     let end: number;
-    while (this.pos < this.source.length && !this.source.startsWith('](', this.pos)) {
+    while (this.pos < this.source.length &&
+          !this.source.startsWith('](', this.pos)) {
       this.pos++;
     }
     if (this.pos < this.source.length && this.source.startsWith('](', this.pos)) {
