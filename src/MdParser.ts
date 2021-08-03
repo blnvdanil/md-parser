@@ -44,16 +44,16 @@ export class MdParser extends BaseParser {
     }
 
     private isText(token: Token) {
-        return token == Token.TEXT;
+        return token === Token.TEXT;
     }
 
     private parseItems(): Array<BlockItem> {
         const ans = new Array<BlockItem>();
-        while (this.curToken != Token.END) {
+        while (this.curToken !== Token.END) {
             if (this.isText(this.curToken)) {
                 ans.push(new Text(this.curStringToken));
                 this.nextToken();
-            } else if (this.curToken == Token.IMG) {
+            } else if (this.curToken === Token.IMG) {
                 ans.push(this.tr.getImg());
                 this.nextToken();
             } else {
@@ -67,11 +67,11 @@ export class MdParser extends BaseParser {
 
     private parseItem(start: Token): Array<BlockItem> {
         const ans = new Array<BlockItem>();
-        while (this.curToken != Token.END && this.curToken != start) {
+        while (this.curToken !== Token.END && this.curToken !== start) {
             if (this.isText(this.curToken)) {
                 ans.push(new Text(this.curStringToken));
                 this.nextToken();
-            } else if (this.curToken == Token.IMG) {
+            } else if (this.curToken === Token.IMG) {
                 ans.push(this.tr.getImg());
                 this.nextToken();
             } else {
@@ -80,10 +80,10 @@ export class MdParser extends BaseParser {
                 ans.push(...this.parseItem(st));
             }
         }
-        if (this.curToken == start) {
+        if (this.curToken === start) {
             this.nextToken();
             return this.create(ans, start);
-        } else if (start == Token.EMPHASIS || start == Token._EMPHASIS) {
+        } else if (start === Token.EMPHASIS || start === Token._EMPHASIS) {
             const temp = new Array<BlockItem>();
             temp.push(new Text(this.tokenToString(start)));
             temp.push(...ans);
@@ -156,7 +156,7 @@ export class MdParser extends BaseParser {
 
     private nextElement(): boolean {
         this.skipEmpties();
-        if (this.curLine == null) {
+        if (this.curLine === null) {
             return false;
         }
         const elem = new Array<string>();

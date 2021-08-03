@@ -44,7 +44,7 @@ export class TokenReader {
     }
 
     private test(ch: string): boolean {
-        return this.pos < this.source.length && ch == this.source[this.pos];
+        return this.pos < this.source.length && ch === this.source[this.pos];
     }
 
     private parseImg(): void {
@@ -84,7 +84,7 @@ export class TokenReader {
             const temp = this.strToToken.get(this.curTag);
             this.curToken = temp === undefined ? Token.CODE : temp;
             this.pos += this.curTag.length;
-            if (this.curToken == Token.IMG) {
+            if (this.curToken === Token.IMG) {
                 this.parseImg();
             }
             return this.curToken;
@@ -94,13 +94,13 @@ export class TokenReader {
 
         while (this.pos < this.source.length && !this.checkTag()) {
             const ch: string = this.source.charAt(this.pos++);
-            if (ch == '<') {
+            if (ch === '<') {
                 sb.push('&lt;');
-            } else if (ch == '>') {
+            } else if (ch === '>') {
                 sb.push('&gt;');
-            } else if (ch == '&') {
+            } else if (ch === '&') {
                 sb.push('&amp;');
-            } else if (ch == '\\' && this.pos < this.source.length && (this.test('*') || this.test('_'))) {
+            } else if (ch === '\\' && this.pos < this.source.length && (this.test('*') || this.test('_'))) {
                 sb.push(this.source.charAt(this.pos++));
             } else {
                 sb.push(ch);

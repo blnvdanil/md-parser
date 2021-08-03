@@ -150,7 +150,7 @@ var TokenReader = /*#__PURE__*/function () {
   };
 
   _proto.test = function test(ch) {
-    return this.pos < this.source.length && ch == this.source[this.pos];
+    return this.pos < this.source.length && ch === this.source[this.pos];
   };
 
   _proto.parseImg = function parseImg() {
@@ -196,7 +196,7 @@ var TokenReader = /*#__PURE__*/function () {
       this.curToken = temp === undefined ? Token.CODE : temp;
       this.pos += this.curTag.length;
 
-      if (this.curToken == Token.IMG) {
+      if (this.curToken === Token.IMG) {
         this.parseImg();
       }
 
@@ -208,13 +208,13 @@ var TokenReader = /*#__PURE__*/function () {
     while (this.pos < this.source.length && !this.checkTag()) {
       var ch = this.source.charAt(this.pos++);
 
-      if (ch == '<') {
+      if (ch === '<') {
         sb.push('&lt;');
-      } else if (ch == '>') {
+      } else if (ch === '>') {
         sb.push('&gt;');
-      } else if (ch == '&') {
+      } else if (ch === '&') {
         sb.push('&amp;');
-      } else if (ch == '\\' && this.pos < this.source.length && (this.test('*') || this.test('_'))) {
+      } else if (ch === '\\' && this.pos < this.source.length && (this.test('*') || this.test('_'))) {
         sb.push(this.source.charAt(this.pos++));
       } else {
         sb.push(ch);
@@ -472,17 +472,17 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
   };
 
   _proto.isText = function isText(token) {
-    return token == Token.TEXT;
+    return token === Token.TEXT;
   };
 
   _proto.parseItems = function parseItems() {
     var ans = new Array();
 
-    while (this.curToken != Token.END) {
+    while (this.curToken !== Token.END) {
       if (this.isText(this.curToken)) {
         ans.push(new Text(this.curStringToken));
         this.nextToken();
-      } else if (this.curToken == Token.IMG) {
+      } else if (this.curToken === Token.IMG) {
         ans.push(this.tr.getImg());
         this.nextToken();
       } else {
@@ -498,11 +498,11 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
   _proto.parseItem = function parseItem(start) {
     var ans = new Array();
 
-    while (this.curToken != Token.END && this.curToken != start) {
+    while (this.curToken !== Token.END && this.curToken !== start) {
       if (this.isText(this.curToken)) {
         ans.push(new Text(this.curStringToken));
         this.nextToken();
-      } else if (this.curToken == Token.IMG) {
+      } else if (this.curToken === Token.IMG) {
         ans.push(this.tr.getImg());
         this.nextToken();
       } else {
@@ -512,10 +512,10 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
       }
     }
 
-    if (this.curToken == start) {
+    if (this.curToken === start) {
       this.nextToken();
       return this.create(ans, start);
-    } else if (start == Token.EMPHASIS || start == Token._EMPHASIS) {
+    } else if (start === Token.EMPHASIS || start === Token._EMPHASIS) {
       var temp = new Array();
       temp.push(new Text(this.tokenToString(start)));
       temp.push.apply(temp, ans);
@@ -615,7 +615,7 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
   _proto.nextElement = function nextElement() {
     this.skipEmpties();
 
-    if (this.curLine == null) {
+    if (this.curLine === null) {
       return false;
     }
 
