@@ -23,7 +23,6 @@ export class MdParser extends BaseParser {
   constructor(data: string) {
     super();
     this.source = data.split('\n');
-    console.log(this.source);
   }
 
 

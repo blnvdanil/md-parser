@@ -258,7 +258,6 @@ var Paragraph = /*#__PURE__*/function () {
   var _proto = Paragraph.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    console.log('p: ', this.elements);
     st.push('<p>');
 
     for (var _iterator = _createForOfIteratorHelperLoose(this.elements), _step; !(_step = _iterator()).done;) {
@@ -447,7 +446,6 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     _this.headerStarts = ['###### ', '##### ', '#### ', '### ', '## ', '# '];
     _this.hLevel = 0;
     _this.source = data.split('\n');
-    console.log(_this.source);
     return _this;
   }
 
