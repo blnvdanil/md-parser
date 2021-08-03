@@ -1,5 +1,5 @@
-import {Token} from "./Token";
-import {Image} from "./markup/Image";
+import {Token} from './Token';
+import {Image} from './markup/Image';
 
 export class TokenReader {
     private readonly source: string = '';

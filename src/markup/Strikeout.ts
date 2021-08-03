@@ -1,5 +1,5 @@
-import {BlockMarkableItem} from "./BlockMarkableItem";
-import {BlockItem} from "./BlockItem";
+import {BlockMarkableItem} from './BlockMarkableItem';
+import {BlockItem} from './BlockItem';
 
 export class Strikeout extends BlockMarkableItem {
     constructor(elements: Array<BlockItem>) {

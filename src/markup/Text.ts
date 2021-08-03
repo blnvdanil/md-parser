@@ -1,4 +1,4 @@
-import {BlockItem} from "./BlockItem";
+import {BlockItem} from './BlockItem';
 
 export class Text implements BlockItem {
     private text: string;

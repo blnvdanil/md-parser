@@ -1,5 +1,5 @@
-import { Markable } from "./Markable";
-import { BlockItem } from "./BlockItem";
+import { Markable } from './Markable';
+import { BlockItem } from './BlockItem';
 export declare class Header implements Markable {
     private elements;
     private hLevel;

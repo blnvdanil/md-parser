@@ -1,4 +1,4 @@
-import { BlockItem } from "./BlockItem";
+import { BlockItem } from './BlockItem';
 export declare abstract class BlockMarkableItem implements BlockItem {
     private elements;
     protected constructor(elements: Array<BlockItem>);

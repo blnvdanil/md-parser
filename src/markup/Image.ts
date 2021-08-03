@@ -1,4 +1,4 @@
-import {BlockItem} from "./BlockItem";
+import {BlockItem} from './BlockItem';
 
 export class Image implements BlockItem {
     private readonly name: string;

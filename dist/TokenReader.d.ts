@@ -1,7 +1,7 @@
-import { Token } from "./Token";
-import { Image } from "./markup/Image";
+import { Token } from './Token';
+import { Image } from './markup/Image';
 export declare class TokenReader {
-    private source;
+    private readonly source;
     private pos;
     private curToken;
     private curStringToken;

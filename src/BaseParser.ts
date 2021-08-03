@@ -1,5 +1,5 @@
-import {TokenReader} from "./TokenReader";
-import {Token} from "./Token";
+import {TokenReader} from './TokenReader';
+import {Token} from './Token';
 
 export abstract class BaseParser {
     protected tr: TokenReader;

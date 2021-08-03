@@ -105,11 +105,11 @@ var Image = /*#__PURE__*/function () {
   var _proto = Image.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    st.push("<img alt='");
+    st.push('<img alt=\'');
     st.push(this.name);
-    st.push("' src='");
+    st.push('\' src=\'');
     st.push(this.src);
-    st.push("'>");
+    st.push('\'>');
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
@@ -121,15 +121,15 @@ var Image = /*#__PURE__*/function () {
 
 var TokenReader = /*#__PURE__*/function () {
   function TokenReader(source) {
-    this.source = "";
+    this.source = '';
     this.pos = 0;
     this.curToken = Token.CODE;
-    this.curStringToken = "";
-    this.tags = ["**", "__", "--", "*", "_", "`", "!["];
-    this.imgName = "";
-    this.imgSrc = "";
-    this.strToToken = new Map([["**", Token.STRONG], ["*", Token.EMPHASIS], ["--", Token.STRIKEOUT], ["`", Token.CODE], ["_", Token._EMPHASIS], ["__", Token.__STRONG], ["![", Token.IMG]]);
-    this.curTag = "";
+    this.curStringToken = '';
+    this.tags = ['**', '__', '--', '*', '_', '`', '!['];
+    this.imgName = '';
+    this.imgSrc = '';
+    this.strToToken = new Map([['**', Token.STRONG], ['*', Token.EMPHASIS], ['--', Token.STRIKEOUT], ['`', Token.CODE], ['_', Token._EMPHASIS], ['__', Token.__STRONG], ['![', Token.IMG]]);
+    this.curTag = '';
     this.source = source;
     this.pos = 0;
   }
@@ -158,18 +158,18 @@ var TokenReader = /*#__PURE__*/function () {
     var mid;
     var end;
 
-    while (this.pos < this.source.length && !this.source.startsWith("](", this.pos)) {
+    while (this.pos < this.source.length && !this.source.startsWith('](', this.pos)) {
       this.pos++;
     }
 
-    if (this.pos < this.source.length && this.source.startsWith("](", this.pos)) {
+    if (this.pos < this.source.length && this.source.startsWith('](', this.pos)) {
       mid = this.pos;
 
-      while (this.pos < this.source.length && !this.source.startsWith(")", this.pos)) {
+      while (this.pos < this.source.length && !this.source.startsWith(')', this.pos)) {
         this.pos++;
       }
 
-      if (this.pos < this.source.length && this.source.startsWith(")", this.pos)) {
+      if (this.pos < this.source.length && this.source.startsWith(')', this.pos)) {
         end = this.pos;
         this.imgName = this.source.substring(start, mid);
         this.imgSrc = this.source.substring(mid + 2, end);
@@ -178,7 +178,7 @@ var TokenReader = /*#__PURE__*/function () {
       }
     }
 
-    throw "atata";
+    throw 'atata';
   };
 
   _proto.getImg = function getImg() {
@@ -209,11 +209,11 @@ var TokenReader = /*#__PURE__*/function () {
       var ch = this.source.charAt(this.pos++);
 
       if (ch == '<') {
-        sb.push("&lt;");
+        sb.push('&lt;');
       } else if (ch == '>') {
-        sb.push("&gt;");
+        sb.push('&gt;');
       } else if (ch == '&') {
-        sb.push("&amp;");
+        sb.push('&amp;');
       } else if (ch == '\\' && this.pos < this.source.length && (this.test('*') || this.test('_'))) {
         sb.push(this.source.charAt(this.pos++));
       } else {
@@ -222,7 +222,7 @@ var TokenReader = /*#__PURE__*/function () {
     }
 
     this.curToken = Token.TEXT;
-    this.curStringToken = sb.join("");
+    this.curStringToken = sb.join('');
     return this.curToken;
   };
 
@@ -235,9 +235,9 @@ var TokenReader = /*#__PURE__*/function () {
 
 var BaseParser = /*#__PURE__*/function () {
   function BaseParser() {
-    this.tr = new TokenReader("");
+    this.tr = new TokenReader('');
     this.curToken = Token.CODE;
-    this.curStringToken = "";
+    this.curStringToken = '';
   }
 
   var _proto = BaseParser.prototype;
@@ -258,15 +258,15 @@ var Paragraph = /*#__PURE__*/function () {
   var _proto = Paragraph.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    console.log("p: ", this.elements);
-    st.push("<p>");
+    console.log('p: ', this.elements);
+    st.push('<p>');
 
     for (var _iterator = _createForOfIteratorHelperLoose(this.elements), _step; !(_step = _iterator()).done;) {
       var elem = _step.value;
       elem.toHtml(st);
     }
 
-    st.push("</p>");
+    st.push('</p>');
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
@@ -365,11 +365,11 @@ var Strikeout = /*#__PURE__*/function (_BlockMarkableItem) {
   var _proto = Strikeout.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    _BlockMarkableItem.prototype.toHtmlSuper.call(this, "<s>", "</s>", st);
+    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<s>', '</s>', st);
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
-    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, "~", "~", st);
+    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '~', '~', st);
   };
 
   return Strikeout;
@@ -385,11 +385,11 @@ var Strong = /*#__PURE__*/function (_BlockMarkableItem) {
   var _proto = Strong.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    _BlockMarkableItem.prototype.toHtmlSuper.call(this, "<strong>", "</strong>", st);
+    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<strong>', '</strong>', st);
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
-    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, "__", "__", st);
+    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '__', '__', st);
   };
 
   return Strong;
@@ -405,11 +405,11 @@ var Emphasis = /*#__PURE__*/function (_BlockMarkableItem) {
   var _proto = Emphasis.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    _BlockMarkableItem.prototype.toHtmlSuper.call(this, "<em>", "</em>", st);
+    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<em>', '</em>', st);
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
-    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, "*", "*", st);
+    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '*', '*', st);
   };
 
   return Emphasis;
@@ -425,11 +425,11 @@ var Code = /*#__PURE__*/function (_BlockMarkableItem) {
   var _proto = Code.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    _BlockMarkableItem.prototype.toHtmlSuper.call(this, "`", "`", st);
+    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '`', '`', st);
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
-    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, "<code>", "</code>", st);
+    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '<code>', '</code>', st);
   };
 
   return Code;
@@ -442,11 +442,11 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     var _this;
 
     _this = _BaseParser.call(this) || this;
-    _this.curElem = "";
-    _this.curLine = "";
-    _this.headerStarts = ["###### ", "##### ", "#### ", "### ", "## ", "# "];
+    _this.curElem = '';
+    _this.curLine = '';
+    _this.headerStarts = ['###### ', '##### ', '#### ', '### ', '## ', '# '];
     _this.hLevel = 0;
-    _this.source = data.split("\n");
+    _this.source = data.split('\n');
     console.log(_this.source);
     return _this;
   }
@@ -522,7 +522,7 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
       this.nextToken();
       return temp;
     } else {
-      throw "Unclosed tag! expected " + start + "found " + this.curToken;
+      throw 'Unclosed tag! expected ' + start + 'found ' + this.curToken;
     }
   };
 
@@ -530,37 +530,37 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     switch (token) {
       case Token.STRIKEOUT:
         {
-          return "--";
+          return '--';
         }
 
       case Token.STRONG:
         {
-          return "**";
+          return '**';
         }
 
       case Token.__STRONG:
         {
-          return "__";
+          return '__';
         }
 
       case Token.EMPHASIS:
         {
-          return "*";
+          return '*';
         }
 
       case Token._EMPHASIS:
         {
-          return "_";
+          return '_';
         }
 
       case Token.CODE:
         {
-          return "`";
+          return '`';
         }
 
       default:
         {
-          throw "atata";
+          throw 'atata';
         }
     }
   };
@@ -599,7 +599,7 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
       default:
         {
-          throw "atata";
+          throw 'atata';
         }
     }
   };
@@ -607,7 +607,7 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
   _proto.skipEmpties = function skipEmpties() {
     this.curLine = this.next();
 
-    while (this.curLine !== null && this.curLine === "") {
+    while (this.curLine !== null && this.curLine === '') {
       this.curLine = this.next();
     }
   };
@@ -623,13 +623,13 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     elem.push(this.curLine);
     this.curLine = this.next();
 
-    while (this.curLine !== null && this.curLine !== "") {
-      elem.push("\n");
+    while (this.curLine !== null && this.curLine !== '') {
+      elem.push('\n');
       elem.push(this.curLine);
       this.curLine = this.next();
     }
 
-    this.curElem = elem.join("");
+    this.curElem = elem.join('');
     return true;
   };
 

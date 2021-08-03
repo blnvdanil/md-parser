@@ -1,7 +1,7 @@
-import { BaseParser } from "./BaseParser";
-import { Markable } from "./markup/Markable";
+import { BaseParser } from './BaseParser';
+import { Markable } from './markup/Markable';
 export declare class MdParser extends BaseParser {
-    private source;
+    private readonly source;
     private curElem;
     private curLine;
     private headerStarts;

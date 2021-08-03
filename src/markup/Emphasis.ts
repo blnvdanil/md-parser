@@ -1,5 +1,5 @@
-import {BlockItem} from "./BlockItem";
-import {BlockMarkableItem} from "./BlockMarkableItem";
+import {BlockItem} from './BlockItem';
+import {BlockMarkableItem} from './BlockMarkableItem';
 
 export class Emphasis extends BlockMarkableItem {
 

@@ -1,15 +1,15 @@
-import {BaseParser} from "./BaseParser";
-import {Markable} from "./markup/Markable";
-import {TokenReader} from "./TokenReader";
-import {Paragraph} from "./markup/Paragraph";
-import {Header} from "./markup/Header";
-import {Token} from "./Token";
-import {BlockItem} from "./markup/BlockItem";
-import {Text} from "./markup/Text";
-import {Strikeout} from "./markup/Strikeout";
-import {Strong} from "./markup/Strong";
-import {Emphasis} from "./markup/Emphasis";
-import {Code} from "./markup/Code";
+import {BaseParser} from './BaseParser';
+import {Markable} from './markup/Markable';
+import {TokenReader} from './TokenReader';
+import {Paragraph} from './markup/Paragraph';
+import {Header} from './markup/Header';
+import {Token} from './Token';
+import {BlockItem} from './markup/BlockItem';
+import {Text} from './markup/Text';
+import {Strikeout} from './markup/Strikeout';
+import {Strong} from './markup/Strong';
+import {Emphasis} from './markup/Emphasis';
+import {Code} from './markup/Code';
 
 
 export class MdParser extends BaseParser {

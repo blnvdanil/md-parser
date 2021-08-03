@@ -1,4 +1,4 @@
-import { BlockItem } from "./BlockItem";
+import { BlockItem } from './BlockItem';
 export declare class Text implements BlockItem {
     private text;
     constructor(text: string);

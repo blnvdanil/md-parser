@@ -1,5 +1,5 @@
-import {Markable} from "./Markable";
-import {BlockItem} from "./BlockItem";
+import {Markable} from './Markable';
+import {BlockItem} from './BlockItem';
 
 export class Paragraph implements Markable {
     private readonly elements: Array<BlockItem>;
