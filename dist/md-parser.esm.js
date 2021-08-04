@@ -644,16 +644,16 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
   };
 
   _proto.isParagraph = function isParagraph() {
-    // if (this.isHeaderRequired) {
-    for (var _iterator = _createForOfIteratorHelperLoose(this.headerStarts), _step; !(_step = _iterator()).done;) {
-      var headerStart = _step.value;
+    if (this.isHeaderRequired) {
+      for (var _iterator = _createForOfIteratorHelperLoose(this.headerStarts), _step; !(_step = _iterator()).done;) {
+        var headerStart = _step.value;
 
-      if (this.curElem.startsWith(headerStart)) {
-        this.hLevel = headerStart.length - 1;
-        return false;
+        if (this.curElem.startsWith(headerStart)) {
+          this.hLevel = headerStart.length - 1;
+          return false;
+        }
       }
-    } // }
-
+    }
 
     return true;
   };
