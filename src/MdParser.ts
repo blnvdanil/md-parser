@@ -22,9 +22,9 @@ export class MdParser extends BaseParser {
 
   isHeaderRequired: boolean = false;
 
-  constructor(data: string, config?: any) {
+  constructor(data: string, isHeaderRequired?: any) {
     super();
-    this.isHeaderRequired = config.isHeaderRequired || false;
+    this.isHeaderRequired = !!isHeaderRequired;
     this.source = data.split('\n');
   }
 

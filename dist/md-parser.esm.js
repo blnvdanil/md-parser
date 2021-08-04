@@ -437,7 +437,7 @@ var Code = /*#__PURE__*/function (_BlockMarkableItem) {
 var MdParser = /*#__PURE__*/function (_BaseParser) {
   _inheritsLoose(MdParser, _BaseParser);
 
-  function MdParser(data, config) {
+  function MdParser(data, isHeaderRequired) {
     var _this;
 
     _this = _BaseParser.call(this) || this;
@@ -446,7 +446,7 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     _this.headerStarts = ['###### ', '##### ', '#### ', '### ', '## ', '# '];
     _this.hLevel = 0;
     _this.isHeaderRequired = false;
-    _this.isHeaderRequired = config.isHeaderRequired || false;
+    _this.isHeaderRequired = !!isHeaderRequired;
     _this.source = data.split('\n');
     return _this;
   }
