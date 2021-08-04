@@ -441,7 +441,7 @@ var Code = /*#__PURE__*/function (_BlockMarkableItem) {
 var MdParser = /*#__PURE__*/function (_BaseParser) {
   _inheritsLoose(MdParser, _BaseParser);
 
-  function MdParser(data) {
+  function MdParser(data, config) {
     var _this;
 
     _this = _BaseParser.call(this) || this;
@@ -449,6 +449,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     _this.curLine = '';
     _this.headerStarts = ['###### ', '##### ', '#### ', '### ', '## ', '# '];
     _this.hLevel = 0;
+    _this.isHeaderRequired = false;
+    _this.isHeaderRequired = config.isHeaderRequired || false;
     _this.source = data.split('\n');
     return _this;
   }
@@ -646,12 +648,14 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
   };
 
   _proto.isParagraph = function isParagraph() {
-    for (var _iterator = _createForOfIteratorHelperLoose(this.headerStarts), _step; !(_step = _iterator()).done;) {
-      var headerStart = _step.value;
+    if (this.isHeaderRequired) {
+      for (var _iterator = _createForOfIteratorHelperLoose(this.headerStarts), _step; !(_step = _iterator()).done;) {
+        var headerStart = _step.value;
 
-      if (this.curElem.startsWith(headerStart)) {
-        this.hLevel = headerStart.length - 1;
-        return false;
+        if (this.curElem.startsWith(headerStart)) {
+          this.hLevel = headerStart.length - 1;
+          return false;
+        }
       }
     }
 

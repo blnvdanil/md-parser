@@ -20,8 +20,11 @@ export class MdParser extends BaseParser {
 
   private hLevel: number = 0;
 
-  constructor(data: string) {
+  isHeaderRequired: boolean = false;
+
+  constructor(data: string, config?: any) {
     super();
+    this.isHeaderRequired = config.isHeaderRequired || false;
     this.source = data.split('\n');
   }
 
@@ -178,10 +181,12 @@ export class MdParser extends BaseParser {
   }
 
   private isParagraph(): boolean {
-    for (const headerStart of this.headerStarts) {
-      if (this.curElem.startsWith(headerStart)) {
-        this.hLevel = headerStart.length - 1;
-        return false;
+    if (this.isHeaderRequired) {
+      for (const headerStart of this.headerStarts) {
+        if (this.curElem.startsWith(headerStart)) {
+          this.hLevel = headerStart.length - 1;
+          return false;
+        }
       }
     }
     return true;
