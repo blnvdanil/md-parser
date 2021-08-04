@@ -7,7 +7,8 @@ export declare class MdParser extends BaseParser {
     private headerStarts;
     private hLevel;
     isHeaderRequired: boolean;
-    constructor(data: string, isHeaderRequired?: any);
+    isImageRequired: boolean;
+    constructor(data: string, isHeaderRequired?: boolean, isImageRequired?: boolean);
     parse(): Array<Markable>;
     private isText;
     private parseItems;

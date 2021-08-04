@@ -10,7 +10,7 @@ export declare class TokenReader {
     private imgSrc;
     private strToToken;
     private curTag;
-    constructor(source: string);
+    constructor(source: string, isImageRequired?: boolean);
     private checkTag;
     private test;
     private parseImg;

@@ -10,7 +10,7 @@ export class TokenReader {
 
   private curStringToken: string = '';
 
-  private tags: string[] = ['**', '__', '--', '*', '_', '`', '!['];
+  private tags: string[] = ['**', '__', '--', '*', '_', '`'];
 
   private imgName: string = '';
 
@@ -28,7 +28,10 @@ export class TokenReader {
 
   private curTag: string = '';
 
-  constructor(source: string) {
+  constructor(source: string, isImageRequired?: boolean) {
+    if (isImageRequired) {
+      this.tags.push('![');
+    }
     this.source = source;
     this.pos = 0;
   }

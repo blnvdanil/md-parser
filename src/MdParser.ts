@@ -21,9 +21,11 @@ export class MdParser extends BaseParser {
   private hLevel: number = 0;
 
   isHeaderRequired: boolean = false;
+  isImageRequired: boolean = false;
 
-  constructor(data: string, isHeaderRequired?: any) {
+  constructor(data: string, isHeaderRequired?: boolean, isImageRequired?: boolean) {
     super();
+    this.isImageRequired = !!isImageRequired;
     this.isHeaderRequired = !!isHeaderRequired;
     this.source = data.split('\n');
   }
@@ -33,11 +35,11 @@ export class MdParser extends BaseParser {
     const ans = new Array<Markable>();
     while (this.nextElement()) {
       if (this.isParagraph()) {
-        this.tr = new TokenReader(this.curElem);
+        this.tr = new TokenReader(this.curElem, this.isImageRequired);
         this.nextToken();
         ans.push(new Paragraph(this.parseItems()));
       } else {
-        this.tr = new TokenReader(this.curElem.substring(this.hLevel + 1));
+        this.tr = new TokenReader(this.curElem.substring(this.hLevel + 1), this.isImageRequired);
         this.nextToken();
         ans.push(new Header(this.parseItems(), this.hLevel));
       }

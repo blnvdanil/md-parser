@@ -124,16 +124,21 @@ var Image = /*#__PURE__*/function () {
 }();
 
 var TokenReader = /*#__PURE__*/function () {
-  function TokenReader(source) {
+  function TokenReader(source, isImageRequired) {
     this.source = '';
     this.pos = 0;
     this.curToken = Token.CODE;
     this.curStringToken = '';
-    this.tags = ['**', '__', '--', '*', '_', '`', '!['];
+    this.tags = ['**', '__', '--', '*', '_', '`'];
     this.imgName = '';
     this.imgSrc = '';
     this.strToToken = new Map([['**', Token.STRONG], ['*', Token.EMPHASIS], ['--', Token.STRIKEOUT], ['`', Token.CODE], ['_', Token._EMPHASIS], ['__', Token.__STRONG], ['![', Token.IMG]]);
     this.curTag = '';
+
+    if (isImageRequired) {
+      this.tags.push('![');
+    }
+
     this.source = source;
     this.pos = 0;
   }
@@ -441,7 +446,7 @@ var Code = /*#__PURE__*/function (_BlockMarkableItem) {
 var MdParser = /*#__PURE__*/function (_BaseParser) {
   _inheritsLoose(MdParser, _BaseParser);
 
-  function MdParser(data, isHeaderRequired) {
+  function MdParser(data, isHeaderRequired, isImageRequired) {
     var _this;
 
     _this = _BaseParser.call(this) || this;
@@ -450,6 +455,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     _this.headerStarts = ['###### ', '##### ', '#### ', '### ', '## ', '# '];
     _this.hLevel = 0;
     _this.isHeaderRequired = false;
+    _this.isImageRequired = false;
+    _this.isImageRequired = !!isImageRequired;
     _this.isHeaderRequired = !!isHeaderRequired;
     _this.source = data.split('\n');
     return _this;
@@ -462,11 +469,11 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
     while (this.nextElement()) {
       if (this.isParagraph()) {
-        this.tr = new TokenReader(this.curElem);
+        this.tr = new TokenReader(this.curElem, this.isImageRequired);
         this.nextToken();
         ans.push(new Paragraph(this.parseItems()));
       } else {
-        this.tr = new TokenReader(this.curElem.substring(this.hLevel + 1));
+        this.tr = new TokenReader(this.curElem.substring(this.hLevel + 1), this.isImageRequired);
         this.nextToken();
         ans.push(new Header(this.parseItems(), this.hLevel));
       }
