@@ -181,14 +181,14 @@ export class MdParser extends BaseParser {
   }
 
   private isParagraph(): boolean {
-    if (this.isHeaderRequired) {
+    // if (this.isHeaderRequired) {
       for (const headerStart of this.headerStarts) {
         if (this.curElem.startsWith(headerStart)) {
           this.hLevel = headerStart.length - 1;
           return false;
         }
       }
-    }
+    // }
     return true;
   }
 
