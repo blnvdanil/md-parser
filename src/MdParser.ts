@@ -20,6 +20,8 @@ export class MdParser extends BaseParser {
 
   private hLevel: number = 0;
 
+  thrownError: boolean = false;
+
   isHeaderRequired: boolean = false;
   isImageRequired: boolean = false;
 
@@ -27,9 +29,17 @@ export class MdParser extends BaseParser {
     super();
     this.isImageRequired = !!isImageRequired;
     this.isHeaderRequired = !!isHeaderRequired;
-    this.source = data.split('\n');
+    this.source = data.trim().split('\n');
   }
 
+  public parseToHtml(): string {
+    const res = this.parse();
+    if (this.thrownError) {
+      return this.source.join('\n');
+    } else {
+      return res.join('');
+    }
+  }
 
   public parse(): Array<Markable> {
     const ans = new Array<Markable>();
@@ -94,7 +104,8 @@ export class MdParser extends BaseParser {
       this.nextToken();
       return temp;
     } else {
-      throw 'Unclosed tag! expected ' + start + 'found ' + this.curToken;
+      this.thrownError = true;
+      return [];
     }
   }
 
@@ -119,7 +130,8 @@ export class MdParser extends BaseParser {
         return '`';
       }
       default: {
-        throw 'atata';
+        this.thrownError = true;
+        return "";
       }
     }
   }
@@ -145,7 +157,8 @@ export class MdParser extends BaseParser {
         return [new Code(ans)];
       }
       default: {
-        throw 'atata';
+        this.thrownError = true;
+        return [new Code(ans)];
       }
     }
   }

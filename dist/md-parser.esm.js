@@ -450,15 +450,26 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     _this.curLine = '';
     _this.headerStarts = ['###### ', '##### ', '#### ', '### ', '## ', '# '];
     _this.hLevel = 0;
+    _this.thrownError = false;
     _this.isHeaderRequired = false;
     _this.isImageRequired = false;
     _this.isImageRequired = !!isImageRequired;
     _this.isHeaderRequired = !!isHeaderRequired;
-    _this.source = data.split('\n');
+    _this.source = data.trim().split('\n');
     return _this;
   }
 
   var _proto = MdParser.prototype;
+
+  _proto.parseToHtml = function parseToHtml() {
+    var res = this.parse();
+
+    if (this.thrownError) {
+      return this.source.join('\n');
+    } else {
+      return res.join('');
+    }
+  };
 
   _proto.parse = function parse() {
     var ans = new Array();
@@ -529,7 +540,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
       this.nextToken();
       return temp;
     } else {
-      throw 'Unclosed tag! expected ' + start + 'found ' + this.curToken;
+      this.thrownError = true;
+      return [];
     }
   };
 
@@ -567,7 +579,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
       default:
         {
-          throw 'atata';
+          this.thrownError = true;
+          return "";
         }
     }
   };
@@ -606,7 +619,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
       default:
         {
-          throw 'atata';
+          this.thrownError = true;
+          return [new Code(ans)];
         }
     }
   };
