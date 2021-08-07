@@ -504,7 +504,7 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     }
 
     var htmlStr = html.join('');
-    var mdStr = md.join('');
+    var mdStr = this.source.join('\n');
     var textStr = text.join('');
     console.log('html', [htmlStr]);
     console.log('md', [mdStr]);

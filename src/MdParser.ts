@@ -46,7 +46,7 @@ export class MdParser extends BaseParser {
       elem.toMarkdown(md);
     }
     const htmlStr: string = html.join('');
-    const mdStr: string = md.join('');
+    const mdStr: string = this.source.join('\n');
     const textStr: string = text.join('');
     console.log('html', [htmlStr]);
     console.log('md', [mdStr]);
