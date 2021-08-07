@@ -478,6 +478,12 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
         value.toHtml(st);
       }
 
+      var result = st.join('');
+
+      if (result === '') {
+        return this.source.join('\n');
+      }
+
       return st.join('');
     }
   };
