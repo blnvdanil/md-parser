@@ -116,6 +116,10 @@ var Image = /*#__PURE__*/function () {
     throw st;
   };
 
+  _proto.toText = function toText(st) {
+    st.push('');
+  };
+
   return Image;
 }();
 
@@ -280,6 +284,13 @@ var Paragraph = /*#__PURE__*/function () {
     }
   };
 
+  _proto.toText = function toText(st) {
+    for (var _iterator3 = _createForOfIteratorHelperLoose(this.elements), _step3; !(_step3 = _iterator3()).done;) {
+      var elem = _step3.value;
+      elem.toText(st);
+    }
+  };
+
   return Paragraph;
 }();
 
@@ -306,6 +317,10 @@ var Header = /*#__PURE__*/function () {
     throw st;
   };
 
+  _proto.toText = function toText(st) {
+    st.push("");
+  };
+
   return Header;
 }();
 
@@ -321,6 +336,10 @@ var Text = /*#__PURE__*/function () {
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
+    st.push(this.text);
+  };
+
+  _proto.toText = function toText(st) {
     st.push(this.text);
   };
 
@@ -354,6 +373,13 @@ var BlockMarkableItem = /*#__PURE__*/function () {
     }
 
     st.push(end);
+  };
+
+  _proto.toText = function toText(st) {
+    for (var _iterator3 = _createForOfIteratorHelperLoose(this.elements), _step3; !(_step3 = _iterator3()).done;) {
+      var elem = _step3.value;
+      elem.toText(st);
+    }
   };
 
   return BlockMarkableItem;
@@ -474,9 +500,15 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
         value.toHtml(st);
       }
 
-      var result = st.join('');
+      var text = new Array();
 
-      if (result === '') {
+      for (var _iterator2 = _createForOfIteratorHelperLoose(res), _step2; !(_step2 = _iterator2()).done;) {
+        var _value = _step2.value;
+
+        _value.toText(text);
+      }
+
+      if (text.join('') === '') {
         return this.source.join('\n');
       }
 
@@ -679,8 +711,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
   _proto.isParagraph = function isParagraph() {
     if (this.isHeaderRequired) {
-      for (var _iterator2 = _createForOfIteratorHelperLoose(this.headerStarts), _step2; !(_step2 = _iterator2()).done;) {
-        var headerStart = _step2.value;
+      for (var _iterator3 = _createForOfIteratorHelperLoose(this.headerStarts), _step3; !(_step3 = _iterator3()).done;) {
+        var headerStart = _step3.value;
 
         if (this.curElem.startsWith(headerStart)) {
           this.hLevel = headerStart.length - 1;

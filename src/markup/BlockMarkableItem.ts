@@ -23,7 +23,14 @@ export abstract class BlockMarkableItem implements BlockItem {
     st.push(end);
   }
 
+  public toText(st: Array<string>): void {
+    for (const elem of this.elements) {
+      elem.toText(st);
+    }
+  }
+
   abstract toMarkdown(st: Array<string>): void;
 
   abstract toHtml(st: Array<string>): void;
 }
+

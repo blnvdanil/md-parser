@@ -15,5 +15,8 @@ export class Text implements BlockItem {
     st.push(this.text);
   }
 
+  toText(st: Array<string>): void {
+    st.push(this.text);
+  }
 
 }

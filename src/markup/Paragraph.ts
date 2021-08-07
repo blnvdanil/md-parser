@@ -22,5 +22,11 @@ export class Paragraph implements Markable {
     }
   }
 
+  toText(st: Array<string>) {
+    for (const elem of this.elements) {
+      elem.toText(st);
+    }
+  }
+
 
 }

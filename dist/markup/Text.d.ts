@@ -4,4 +4,5 @@ export declare class Text implements BlockItem {
     constructor(text: string);
     toHtml(st: Array<string>): void;
     toMarkdown(st: Array<string>): void;
+    toText(st: Array<string>): void;
 }

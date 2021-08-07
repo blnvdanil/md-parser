@@ -21,5 +21,9 @@ export class Image implements BlockItem {
     throw st;
   }
 
+  toText(st: Array<string>): void {
+    st.push('');
+  }
+
 
 }

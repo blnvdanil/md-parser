@@ -5,4 +5,5 @@ export declare class Image implements BlockItem {
     constructor(name: string, src: string);
     toHtml(st: Array<string>): void;
     toMarkdown(st: Array<string>): void;
+    toText(st: Array<string>): void;
 }

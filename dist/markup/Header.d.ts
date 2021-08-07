@@ -6,4 +6,5 @@ export declare class Header implements Markable {
     constructor(elements: Array<BlockItem>, hLevel: number);
     toHtml(st: Array<string>): void;
     toMarkdown(st: Array<string>): void;
+    toText(st: Array<string>): void;
 }

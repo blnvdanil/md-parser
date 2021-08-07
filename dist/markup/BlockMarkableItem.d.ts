@@ -4,6 +4,7 @@ export declare abstract class BlockMarkableItem implements BlockItem {
     protected constructor(elements: Array<BlockItem>);
     protected toMarkdownSuper(start: string, end: string, st: Array<string>): void;
     protected toHtmlSuper(start: string, end: string, st: Array<string>): void;
+    toText(st: Array<string>): void;
     abstract toMarkdown(st: Array<string>): void;
     abstract toHtml(st: Array<string>): void;
 }

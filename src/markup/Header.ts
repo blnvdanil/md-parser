@@ -23,4 +23,8 @@ export class Header implements Markable {
     throw st;
   }
 
+  toText(st: Array<string>): void {
+    st.push("");
+  }
+
 }
