@@ -471,7 +471,14 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     if (this.thrownError) {
       return this.source.join('\n');
     } else {
-      return res.join('');
+      var st = new Array();
+
+      for (var _iterator = _createForOfIteratorHelperLoose(res), _step; !(_step = _iterator()).done;) {
+        var value = _step.value;
+        value.toHtml(st);
+      }
+
+      return st.join('');
     }
   };
 
@@ -670,8 +677,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
   _proto.isParagraph = function isParagraph() {
     if (this.isHeaderRequired) {
-      for (var _iterator = _createForOfIteratorHelperLoose(this.headerStarts), _step; !(_step = _iterator()).done;) {
-        var headerStart = _step.value;
+      for (var _iterator2 = _createForOfIteratorHelperLoose(this.headerStarts), _step2; !(_step2 = _iterator2()).done;) {
+        var headerStart = _step2.value;
 
         if (this.curElem.startsWith(headerStart)) {
           this.hLevel = headerStart.length - 1;

@@ -37,7 +37,11 @@ export class MdParser extends BaseParser {
     if (this.thrownError) {
       return this.source.join('\n');
     } else {
-      return res.join('');
+      const st: Array<string> = new Array();
+      for (const value of res) {
+        value.toHtml(st);
+      }
+      return st.join('');
     }
   }
 
