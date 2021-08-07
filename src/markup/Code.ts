@@ -8,10 +8,10 @@ export class Code extends BlockMarkableItem {
   }
 
   toHtml(st: Array<string>): void {
-    super.toHtmlSuper('`', '`', st);
+    super.toHtmlSuper('<code>', '</code>', st);
   }
 
   toMarkdown(st: Array<string>): void {
-    super.toMarkdownSuper('<code>', '</code>', st);
+    super.toMarkdownSuper('`', '`', st);
   }
 }
