@@ -479,6 +479,7 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     _this.thrownError = false;
     _this.isHeaderRequired = false;
     _this.isImageRequired = false;
+    _this.sourceStr = data.trim();
     _this.isImageRequired = !!isImageRequired;
     _this.isHeaderRequired = !!isHeaderRequired;
     _this.source = data.trim().split('\n');
@@ -504,11 +505,11 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     }
 
     var htmlStr = html.join('');
-    var mdStr = this.source.join('\n');
+    var mdStr = this.sourceStr;
     var textStr = text.join('');
-    console.log('html', [htmlStr]);
-    console.log('md', [mdStr]);
-    console.log('text', [textStr]);
+    console.log('htmlStr', [htmlStr]);
+    console.log('mdStr', [mdStr]);
+    console.log('textStr', [textStr]);
 
     if (textStr === '') {
       return mdStr;

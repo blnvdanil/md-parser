@@ -18,6 +18,8 @@ export class MdParser extends BaseParser {
   private curLine: string | null = '';
   private headerStarts = ['###### ', '##### ', '#### ', '### ', '## ', '# '];
 
+  private sourceStr: string;
+
   private hLevel: number = 0;
 
   thrownError: boolean = false;
@@ -27,6 +29,7 @@ export class MdParser extends BaseParser {
 
   constructor(data: string, isHeaderRequired?: boolean, isImageRequired?: boolean) {
     super();
+    this.sourceStr = data.trim();
     this.isImageRequired = !!isImageRequired;
     this.isHeaderRequired = !!isHeaderRequired;
     this.source = data.trim().split('\n');
@@ -46,11 +49,11 @@ export class MdParser extends BaseParser {
       elem.toMarkdown(md);
     }
     const htmlStr: string = html.join('');
-    const mdStr: string = this.source.join('\n');
+    const mdStr: string = this.sourceStr;
     const textStr: string = text.join('');
-    console.log('html', [htmlStr]);
-    console.log('md', [mdStr]);
-    console.log('text', [textStr]);
+    console.log('htmlStr', [htmlStr]);
+    console.log('mdStr', [mdStr]);
+    console.log('textStr', [textStr]);
     if (textStr === '') {
       return mdStr;
     } else {

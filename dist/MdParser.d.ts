@@ -5,6 +5,7 @@ export declare class MdParser extends BaseParser {
     private curElem;
     private curLine;
     private headerStarts;
+    private sourceStr;
     private hLevel;
     thrownError: boolean;
     isHeaderRequired: boolean;
