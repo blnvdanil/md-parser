@@ -493,30 +493,27 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
   _proto.parseToHtml = function parseToHtml() {
     var res = this.parse();
+    var html = [];
+    var md = [];
+    var text = [];
+    console.log(html, md, text);
 
-    if (this.thrownError) {
-      return this.source.join('\n');
+    for (var _iterator = _createForOfIteratorHelperLoose(res), _step; !(_step = _iterator()).done;) {
+      var elem = _step.value;
+      elem.toText(text);
+      elem.toHtml(html);
+      elem.toMarkdown(md);
+    }
+
+    var htmlStr = html.join('');
+    var mdStr = md.join('');
+    var textStr = text.join('');
+    console.log(htmlStr, mdStr, textStr);
+
+    if (textStr === '') {
+      return mdStr;
     } else {
-      var st = new Array();
-
-      for (var _iterator = _createForOfIteratorHelperLoose(res), _step; !(_step = _iterator()).done;) {
-        var value = _step.value;
-        value.toHtml(st);
-      }
-
-      var text = new Array();
-
-      for (var _iterator2 = _createForOfIteratorHelperLoose(res), _step2; !(_step2 = _iterator2()).done;) {
-        var _value = _step2.value;
-
-        _value.toText(text);
-      }
-
-      if (text.join('') === '') {
-        return this.source.join('\n');
-      }
-
-      return st.join('');
+      return htmlStr;
     }
   };
 
@@ -715,8 +712,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
   _proto.isParagraph = function isParagraph() {
     if (this.isHeaderRequired) {
-      for (var _iterator3 = _createForOfIteratorHelperLoose(this.headerStarts), _step3; !(_step3 = _iterator3()).done;) {
-        var headerStart = _step3.value;
+      for (var _iterator2 = _createForOfIteratorHelperLoose(this.headerStarts), _step2; !(_step2 = _iterator2()).done;) {
+        var headerStart = _step2.value;
 
         if (this.curElem.startsWith(headerStart)) {
           this.hLevel = headerStart.length - 1;

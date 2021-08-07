@@ -34,25 +34,23 @@ export class MdParser extends BaseParser {
 
   public parseToHtml(): string {
     const res = this.parse();
-    if (this.thrownError) {
-      return this.source.join('\n');
+    const html: Array<string> = [];
+    const md: Array<string> = [];
+    const text: Array<string> =[];
+    console.log(html, md, text);
+    for (const elem of res) {
+      elem.toText(text);
+      elem.toHtml(html);
+      elem.toMarkdown(md);
+    }
+    const htmlStr: string = html.join('');
+    const mdStr: string = md.join('');
+    const textStr: string = text.join('');
+    console.log(htmlStr, mdStr, textStr);
+    if (textStr === '') {
+      return mdStr;
     } else {
-      const st: Array<string> = new Array();
-      for (const value of res) {
-        value.toHtml(st);
-      }
-
-      const text: Array<string> = new Array();
-
-      for (const value of res) {
-        value.toText(text);
-      }
-
-      if (text.join('') === '') {
-        return this.source.join('\n');
-      }
-
-      return st.join('');
+      return htmlStr;
     }
   }
 
