@@ -18,7 +18,7 @@ export abstract class BlockMarkableItem implements BlockItem {
   protected toHtmlSuper(start: string, end: string, st: Array<string>): void {
     st.push(start);
     for (const elem of this.elements) {
-      elem.toMarkdown(st);
+      elem.toHtml(st);
     }
     st.push(end);
   }

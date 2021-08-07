@@ -350,7 +350,7 @@ var BlockMarkableItem = /*#__PURE__*/function () {
 
     for (var _iterator2 = _createForOfIteratorHelperLoose(this.elements), _step2; !(_step2 = _iterator2()).done;) {
       var elem = _step2.value;
-      elem.toMarkdown(st);
+      elem.toHtml(st);
     }
 
     st.push(end);
