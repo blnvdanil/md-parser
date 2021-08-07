@@ -479,7 +479,7 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     _this.thrownError = false;
     _this.isHeaderRequired = false;
     _this.isImageRequired = false;
-    _this.sourceStr = data.trim();
+    _this.sourceStr = _this.replaceHtmlSpecials(data.trim());
     _this.isImageRequired = !!isImageRequired;
     _this.isHeaderRequired = !!isHeaderRequired;
     _this.source = data.trim().split('\n');
@@ -488,28 +488,40 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
   var _proto = MdParser.prototype;
 
+  _proto.replaceHtmlSpecials = function replaceHtmlSpecials(data) {
+    var sb = [];
+
+    for (var _iterator = _createForOfIteratorHelperLoose(data), _step; !(_step = _iterator()).done;) {
+      var ch = _step.value;
+
+      if (ch === '<') {
+        sb.push('&lt;');
+      } else if (ch === '>') {
+        sb.push('&gt;');
+      } else if (ch === '&') {
+        sb.push('&amp;');
+      } else {
+        sb.push(ch);
+      }
+    }
+
+    return sb.join('');
+  };
+
   _proto.parseToHtml = function parseToHtml() {
     var res = this.parse();
     var html = [];
-    var md = [];
     var text = [];
-    console.log('html', [html]);
-    console.log('md', [md]);
-    console.log('text', [text]);
 
-    for (var _iterator = _createForOfIteratorHelperLoose(res), _step; !(_step = _iterator()).done;) {
-      var elem = _step.value;
+    for (var _iterator2 = _createForOfIteratorHelperLoose(res), _step2; !(_step2 = _iterator2()).done;) {
+      var elem = _step2.value;
       elem.toText(text);
       elem.toHtml(html);
-      elem.toMarkdown(md);
     }
 
     var htmlStr = html.join('');
     var mdStr = this.sourceStr;
     var textStr = text.join('');
-    console.log('htmlStr', [htmlStr]);
-    console.log('mdStr', [mdStr]);
-    console.log('textStr', [textStr]);
 
     if (textStr === '') {
       return mdStr;
@@ -713,8 +725,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
   _proto.isParagraph = function isParagraph() {
     if (this.isHeaderRequired) {
-      for (var _iterator2 = _createForOfIteratorHelperLoose(this.headerStarts), _step2; !(_step2 = _iterator2()).done;) {
-        var headerStart = _step2.value;
+      for (var _iterator3 = _createForOfIteratorHelperLoose(this.headerStarts), _step3; !(_step3 = _iterator3()).done;) {
+        var headerStart = _step3.value;
 
         if (this.curElem.startsWith(headerStart)) {
           this.hLevel = headerStart.length - 1;

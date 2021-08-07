@@ -11,6 +11,7 @@ export declare class MdParser extends BaseParser {
     isHeaderRequired: boolean;
     isImageRequired: boolean;
     constructor(data: string, isHeaderRequired?: boolean, isImageRequired?: boolean);
+    replaceHtmlSpecials(data: string): string;
     parseToHtml(): string;
     parse(): Array<Markable>;
     private isText;
