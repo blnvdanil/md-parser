@@ -37,7 +37,9 @@ export class MdParser extends BaseParser {
     const html: Array<string> = [];
     const md: Array<string> = [];
     const text: Array<string> =[];
-    console.log(html, md, text);
+    console.log('html', [html]);
+    console.log('md', [md]);
+    console.log('text', [text]);
     for (const elem of res) {
       elem.toText(text);
       elem.toHtml(html);
@@ -46,7 +48,9 @@ export class MdParser extends BaseParser {
     const htmlStr: string = html.join('');
     const mdStr: string = md.join('');
     const textStr: string = text.join('');
-    console.log(htmlStr, mdStr, textStr);
+    console.log('html', [htmlStr]);
+    console.log('md', [mdStr]);
+    console.log('text', [textStr]);
     if (textStr === '') {
       return mdStr;
     } else {

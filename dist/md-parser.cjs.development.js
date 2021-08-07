@@ -496,7 +496,9 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     var html = [];
     var md = [];
     var text = [];
-    console.log(html, md, text);
+    console.log('html', [html]);
+    console.log('md', [md]);
+    console.log('text', [text]);
 
     for (var _iterator = _createForOfIteratorHelperLoose(res), _step; !(_step = _iterator()).done;) {
       var elem = _step.value;
@@ -508,7 +510,9 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     var htmlStr = html.join('');
     var mdStr = md.join('');
     var textStr = text.join('');
-    console.log(htmlStr, mdStr, textStr);
+    console.log('html', [htmlStr]);
+    console.log('md', [mdStr]);
+    console.log('text', [textStr]);
 
     if (textStr === '') {
       return mdStr;
