@@ -1,38 +1,35 @@
-import { BaseParser } from './BaseParser';
-import { Markable } from './markup/Markable';
-import { TokenReader } from './TokenReader';
-import { Paragraph } from './markup/Paragraph';
-import { Header } from './markup/Header';
-import { Token } from './Token';
-import { BlockItem } from './markup/BlockItem';
-import { Text } from './markup/Text';
-import { Strikeout } from './markup/Strikeout';
-import { Strong } from './markup/Strong';
-import { Emphasis } from './markup/Emphasis';
-import { Code } from './markup/Code';
+import {BaseParser} from './BaseParser';
+import {Markable} from './markup/Markable';
+import {TokenReader} from './TokenReader';
+import {Paragraph} from './markup/Paragraph';
+import {Token} from './Token';
+import {BlockItem} from './markup/BlockItem';
+import {Text} from './markup/Text';
+import {Strikeout} from './markup/Strikeout';
+import {Strong} from './markup/Strong';
+import {Emphasis} from './markup/Emphasis';
+import {Code} from './markup/Code';
 
 
 export class MdParser extends BaseParser {
   private readonly source: Array<string>;
   private curElem: string = '';
   private curLine: string | null = '';
-  private headerStarts = ['###### ', '##### ', '#### ', '### ', '## ', '# '];
 
   private sourceStr: string;
-
-  private hLevel: number = 0;
 
   thrownError: boolean = false;
 
   isHeaderRequired: boolean = false;
-  isImageRequired: boolean = false;
+  isLinkRequired: boolean = false;
 
   constructor(data: string, isHeaderRequired?: boolean, isImageRequired?: boolean) {
     super();
     this.sourceStr = this.replaceHtmlSpecials(data.trim());
-    this.isImageRequired = !!isImageRequired;
+    this.isLinkRequired = !!isImageRequired;
     this.isHeaderRequired = !!isHeaderRequired;
-    this.source = data.trim().split('\n');
+    this.source = [data.trim()];
+    console.log("data", [data])
   }
 
   replaceHtmlSpecials(data: string): string {
@@ -54,49 +51,32 @@ export class MdParser extends BaseParser {
   public parseToHtml(): string {
     const res = this.parse();
     const html: Array<string> = [];
-    const text: Array<string> =[];
     for (const elem of res) {
-      elem.toText(text);
       elem.toHtml(html);
     }
-    const htmlStr: string = html.join('');
-    const mdStr: string = this.sourceStr;
-    const textStr: string = text.join('');
-    if (textStr === '') {
-      return mdStr;
-    } else {
-      return htmlStr;
-    }
+    return html.join('');
   }
 
   public parse(): Array<Markable> {
     const ans = new Array<Markable>();
     while (this.nextElement()) {
-      if (this.isParagraph()) {
-        this.tr = new TokenReader(this.curElem, this.isImageRequired);
-        this.nextToken();
-        ans.push(new Paragraph(this.parseItems()));
-      } else {
-        this.tr = new TokenReader(this.curElem.substring(this.hLevel + 1), this.isImageRequired);
-        this.nextToken();
-        ans.push(new Header(this.parseItems(), this.hLevel));
-      }
+      this.tr = new TokenReader(this.curElem);
+      this.nextToken();
+      ans.push(new Paragraph(this.parseItems()));
     }
+    console.log("ans:", ans)
     return ans;
   }
 
-  private isText(token: Token) {
+  private static isText(token: Token) {
     return token === Token.TEXT;
   }
 
   private parseItems(): Array<BlockItem> {
     const ans = new Array<BlockItem>();
     while (this.curToken !== Token.END) {
-      if (this.isText(this.curToken)) {
+      if (MdParser.isText(this.curToken)) {
         ans.push(new Text(this.curStringToken));
-        this.nextToken();
-      } else if (this.curToken === Token.IMG) {
-        ans.push(this.tr.getImg());
         this.nextToken();
       } else {
         const start: Token = this.curToken;
@@ -110,11 +90,8 @@ export class MdParser extends BaseParser {
   private parseItem(start: Token): Array<BlockItem> {
     const ans = new Array<BlockItem>();
     while (this.curToken !== Token.END && this.curToken !== start) {
-      if (this.isText(this.curToken)) {
+      if (MdParser.isText(this.curToken)) {
         ans.push(new Text(this.curStringToken));
-        this.nextToken();
-      } else if (this.curToken === Token.IMG) {
-        ans.push(this.tr.getImg());
         this.nextToken();
       } else {
         const st: Token = this.curToken;
@@ -124,16 +101,10 @@ export class MdParser extends BaseParser {
     }
     if (this.curToken === start) {
       this.nextToken();
-      return this.create(ans, start);
-    } else if (start === Token.EMPHASIS || start === Token._EMPHASIS) {
-      const temp = new Array<BlockItem>();
-      temp.push(new Text(this.tokenToString(start)));
-      temp.push(...ans);
-      this.nextToken();
-      return temp;
+      return this.create(ans, start, true);
     } else {
-      this.thrownError = true;
-      return [];
+      this.nextToken();
+      return this.create(ans, start, false);
     }
   }
 
@@ -145,14 +116,8 @@ export class MdParser extends BaseParser {
       case Token.STRONG: {
         return '**';
       }
-      case Token.__STRONG: {
-        return '__';
-      }
       case Token.EMPHASIS: {
         return '*';
-      }
-      case Token._EMPHASIS: {
-        return '_';
       }
       case Token.CODE: {
         return '`';
@@ -164,29 +129,23 @@ export class MdParser extends BaseParser {
     }
   }
 
-  private create(ans: Array<BlockItem>, token: Token): Array<BlockItem> {
+  private create(ans: Array<BlockItem>, token: Token, closed: boolean): Array<BlockItem> {
     switch (token) {
       case Token.STRIKEOUT: {
-        return [new Strikeout(ans)];
+        return [new Strikeout(ans, closed)];
       }
       case Token.STRONG: {
-        return [new Strong(ans)];
-      }
-      case Token.__STRONG: {
-        return [new Strong(ans)];
+        return [new Strong(ans, closed)];
       }
       case Token.EMPHASIS: {
-        return [new Emphasis(ans)];
-      }
-      case Token._EMPHASIS: {
-        return [new Emphasis(ans)];
+        return [new Emphasis(ans, closed)];
       }
       case Token.CODE: {
-        return [new Code(ans)];
+        return [new Code(ans, closed)];
       }
       default: {
         this.thrownError = true;
-        return [new Code(ans)];
+        return [new Code(ans, closed)];
       }
     }
   }
@@ -211,6 +170,7 @@ export class MdParser extends BaseParser {
       elem.push(this.curLine);
       this.curLine = this.next();
     }
+    console.log(elem);
     this.curElem = elem.join('');
     return true;
   }
@@ -222,17 +182,4 @@ export class MdParser extends BaseParser {
     }
     return null;
   }
-
-  private isParagraph(): boolean {
-    if (this.isHeaderRequired) {
-      for (const headerStart of this.headerStarts) {
-        if (this.curElem.startsWith(headerStart)) {
-          this.hLevel = headerStart.length - 1;
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
 }

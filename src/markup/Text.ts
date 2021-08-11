@@ -1,22 +1,21 @@
 import {BlockItem} from './BlockItem';
 
 export class Text implements BlockItem {
-  private text: string;
+    private text: string;
 
-  constructor(text: string) {
-    this.text = text;
-  }
+    constructor(text: string) {
+        this.text = text;
+    }
 
-  toHtml(st: Array<string>): void {
-    st.push(this.text);
-  }
+    toHtml(st: Array<string>): void {
+        st.push(this.text);
+    }
 
-  toMarkdown(st: Array<string>): void {
-    st.push(this.text);
-  }
+    toMarkdown(st: Array<string>): void {
+        st.push(this.text);
+    }
 
-  toText(st: Array<string>): void {
-    st.push(this.text);
-  }
-
+    toText(st: Array<string>): void {
+        st.push(this.text);
+    }
 }

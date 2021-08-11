@@ -5,7 +5,4 @@ export enum Token {
   STRIKEOUT,
   CODE,
   TEXT,
-  _EMPHASIS,
-  __STRONG,
-  IMG
 }

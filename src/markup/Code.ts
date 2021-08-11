@@ -3,15 +3,15 @@ import {BlockItem} from './BlockItem';
 
 export class Code extends BlockMarkableItem {
 
-  constructor(elements: Array<BlockItem>) {
-    super(elements);
+  constructor(elements: Array<BlockItem>, closed: boolean) {
+    super(elements, closed);
   }
 
   toHtml(st: Array<string>): void {
-    super.toHtmlSuper('<code>', '</code>', st);
+    super.toHtmlSuper('<code>', '</code>', st, '```');
   }
 
   toMarkdown(st: Array<string>): void {
-    super.toMarkdownSuper('`', '`', st);
+    super.toMarkdownSuper('```', '```', st);
   }
 }

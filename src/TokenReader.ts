@@ -1,5 +1,4 @@
 import { Token } from './Token';
-import { Image } from './markup/Image';
 
 export class TokenReader {
   private readonly source: string = '';
@@ -10,28 +9,19 @@ export class TokenReader {
 
   private curStringToken: string = '';
 
-  private tags: string[] = ['**', '__', '--', '*', '_', '`'];
+  private tags: string[] = ['**', '__', '~~', '```'];
 
-  private imgName: string = '';
-
-  private imgSrc: string = '';
 
   private strToToken = new Map([
     ['**', Token.STRONG],
-    ['*', Token.EMPHASIS],
-    ['--', Token.STRIKEOUT],
-    ['`', Token.CODE],
-    ['_', Token._EMPHASIS],
-    ['__', Token.__STRONG],
-    ['![', Token.IMG],
+    ['__', Token.EMPHASIS],
+    ['~~', Token.STRIKEOUT],
+    ['```', Token.CODE],
   ]);
 
   private curTag: string = '';
 
-  constructor(source: string, isImageRequired?: boolean) {
-    if (isImageRequired) {
-      this.tags.push('![');
-    }
+  constructor(source: string) {
     this.source = source;
     this.pos = 0;
   }
@@ -50,34 +40,6 @@ export class TokenReader {
     return this.pos < this.source.length && ch === this.source[this.pos];
   }
 
-  private parseImg(): void {
-    const start: number = this.pos;
-    let mid: number;
-    let end: number;
-    while (this.pos < this.source.length &&
-          !this.source.startsWith('](', this.pos)) {
-      this.pos++;
-    }
-    if (this.pos < this.source.length && this.source.startsWith('](', this.pos)) {
-      mid = this.pos;
-      while (this.pos < this.source.length && !this.source.startsWith(')', this.pos)) {
-        this.pos++;
-      }
-      if (this.pos < this.source.length && this.source.startsWith(')', this.pos)) {
-        end = this.pos;
-        this.imgName = this.source.substring(start, mid);
-        this.imgSrc = this.source.substring(mid + 2, end);
-        this.pos++;
-        return;
-      }
-    }
-    throw 'atata';
-  }
-
-  public getImg(): Image {
-    return new Image(this.imgName, this.imgSrc);
-  }
-
   public nextToken(): Token {
     if (this.pos >= this.source.length) {
       return Token.END;
@@ -88,9 +50,6 @@ export class TokenReader {
       const temp = this.strToToken.get(this.curTag);
       this.curToken = temp === undefined ? Token.CODE : temp;
       this.pos += this.curTag.length;
-      if (this.curToken === Token.IMG) {
-        this.parseImg();
-      }
       return this.curToken;
     }
 
@@ -106,6 +65,8 @@ export class TokenReader {
         sb.push('&amp;');
       } else if (ch === '\\' && this.pos < this.source.length && (this.test('*') || this.test('_'))) {
         sb.push(this.source.charAt(this.pos++));
+      } else if (ch === '\n') {
+        sb.push('<br>');
       } else {
         sb.push(ch);
       }

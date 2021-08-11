@@ -3,8 +3,8 @@ import {BlockItem} from './BlockItem';
 
 export class Header implements Markable {
 
-  private elements: Array<BlockItem>;
-  private hLevel: number;
+  private readonly elements: Array<BlockItem>;
+  private readonly hLevel: number;
 
   constructor(elements: Array<BlockItem>, hLevel: number) {
     this.hLevel = hLevel;
