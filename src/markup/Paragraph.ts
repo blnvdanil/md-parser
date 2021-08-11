@@ -9,11 +9,11 @@ export class Paragraph implements Markable {
   }
 
   toHtml(st: Array<string>): void {
-    st.push('<p>');
+    st.push('');
     for (const elem of this.elements) {
       elem.toHtml(st);
     }
-    st.push('</p>');
+    st.push('');
   }
 
   toMarkdown(st: Array<string>): void {

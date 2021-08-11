@@ -199,14 +199,14 @@ var Paragraph = /*#__PURE__*/function () {
   var _proto = Paragraph.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    st.push('<p>');
+    st.push('');
 
     for (var _iterator = _createForOfIteratorHelperLoose(this.elements), _step; !(_step = _iterator()).done;) {
       var elem = _step.value;
       elem.toHtml(st);
     }
 
-    st.push('</p>');
+    st.push('');
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
