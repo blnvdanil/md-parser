@@ -12,11 +12,11 @@ export class Code extends BlockMarkableItem {
     super.toHtmlSuper('', '', arr, '```');
     let res = arr.join('');
     if (this.closed) {
-      if (res.length > 0 && res[0] === '\n') {
-        res = res.slice(1);
+      if (res.startsWith('<br>')) {
+        res = res.slice(4);
       }
-      if (res.length > 0 && res[res.length - 1] === '\n') {
-        res = res.slice(0, res.length - 1);
+      if (res.endsWith('<br>')) {
+        res = res.slice(0, res.length - 4);
       }
     }
     st.push('<pre>' + res + '</pre>')
