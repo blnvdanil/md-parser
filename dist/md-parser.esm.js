@@ -384,7 +384,7 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     _this.isLinkRequired = false;
     _this.isLinkRequired = !!isImageRequired;
     _this.isHeaderRequired = !!isHeaderRequired;
-    _this.source = [data.trim()];
+    _this.source = [data];
     console.log("data", [data]);
     return _this;
   }

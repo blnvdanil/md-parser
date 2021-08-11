@@ -25,7 +25,7 @@ export class MdParser extends BaseParser {
     super();
     this.isLinkRequired = !!isImageRequired;
     this.isHeaderRequired = !!isHeaderRequired;
-    this.source = [data.trim()];
+    this.source = [data];
     console.log("data", [data])
   }
 
