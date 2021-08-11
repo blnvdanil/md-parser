@@ -16,8 +16,6 @@ export class MdParser extends BaseParser {
   private curElem: string = '';
   private curLine: string | null = '';
 
-  private sourceStr: string;
-
   thrownError: boolean = false;
 
   isHeaderRequired: boolean = false;
@@ -25,7 +23,6 @@ export class MdParser extends BaseParser {
 
   constructor(data: string, isHeaderRequired?: boolean, isImageRequired?: boolean) {
     super();
-    this.sourceStr = this.replaceHtmlSpecials(data.trim());
     this.isLinkRequired = !!isImageRequired;
     this.isHeaderRequired = !!isHeaderRequired;
     this.source = [data.trim()];
@@ -105,27 +102,6 @@ export class MdParser extends BaseParser {
     } else {
       this.nextToken();
       return this.create(ans, start, false);
-    }
-  }
-
-  private tokenToString(token: Token): string {
-    switch (token) {
-      case Token.STRIKEOUT: {
-        return '--';
-      }
-      case Token.STRONG: {
-        return '**';
-      }
-      case Token.EMPHASIS: {
-        return '*';
-      }
-      case Token.CODE: {
-        return '`';
-      }
-      default: {
-        this.thrownError = true;
-        return "";
-      }
     }
   }
 

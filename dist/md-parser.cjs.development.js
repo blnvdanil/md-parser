@@ -95,54 +95,17 @@ var Token;
   Token[Token["STRIKEOUT"] = 3] = "STRIKEOUT";
   Token[Token["CODE"] = 4] = "CODE";
   Token[Token["TEXT"] = 5] = "TEXT";
-  Token[Token["_EMPHASIS"] = 6] = "_EMPHASIS";
-  Token[Token["__STRONG"] = 7] = "__STRONG";
-  Token[Token["IMG"] = 8] = "IMG";
 })(Token || (Token = {}));
 
-var Image = /*#__PURE__*/function () {
-  function Image(name, src) {
-    this.name = name;
-    this.src = src;
-  }
-
-  var _proto = Image.prototype;
-
-  _proto.toHtml = function toHtml(st) {
-    st.push('<img alt=\'');
-    st.push(this.name);
-    st.push('\' src=\'');
-    st.push(this.src);
-    st.push('\'>');
-  };
-
-  _proto.toMarkdown = function toMarkdown(st) {
-    throw st;
-  };
-
-  _proto.toText = function toText(st) {
-    st.push('');
-  };
-
-  return Image;
-}();
-
 var TokenReader = /*#__PURE__*/function () {
-  function TokenReader(source, isImageRequired) {
+  function TokenReader(source) {
     this.source = '';
     this.pos = 0;
     this.curToken = Token.CODE;
     this.curStringToken = '';
-    this.tags = ['**', '__', '--', '*', '_', '`'];
-    this.imgName = '';
-    this.imgSrc = '';
-    this.strToToken = new Map([['**', Token.STRONG], ['*', Token.EMPHASIS], ['--', Token.STRIKEOUT], ['`', Token.CODE], ['_', Token._EMPHASIS], ['__', Token.__STRONG], ['![', Token.IMG]]);
+    this.tags = ['**', '__', '~~', '```'];
+    this.strToToken = new Map([['**', Token.STRONG], ['__', Token.EMPHASIS], ['~~', Token.STRIKEOUT], ['```', Token.CODE]]);
     this.curTag = '';
-
-    if (isImageRequired) {
-      this.tags.push('![');
-    }
-
     this.source = source;
     this.pos = 0;
   }
@@ -166,38 +129,6 @@ var TokenReader = /*#__PURE__*/function () {
     return this.pos < this.source.length && ch === this.source[this.pos];
   };
 
-  _proto.parseImg = function parseImg() {
-    var start = this.pos;
-    var mid;
-    var end;
-
-    while (this.pos < this.source.length && !this.source.startsWith('](', this.pos)) {
-      this.pos++;
-    }
-
-    if (this.pos < this.source.length && this.source.startsWith('](', this.pos)) {
-      mid = this.pos;
-
-      while (this.pos < this.source.length && !this.source.startsWith(')', this.pos)) {
-        this.pos++;
-      }
-
-      if (this.pos < this.source.length && this.source.startsWith(')', this.pos)) {
-        end = this.pos;
-        this.imgName = this.source.substring(start, mid);
-        this.imgSrc = this.source.substring(mid + 2, end);
-        this.pos++;
-        return;
-      }
-    }
-
-    throw 'atata';
-  };
-
-  _proto.getImg = function getImg() {
-    return new Image(this.imgName, this.imgSrc);
-  };
-
   _proto.nextToken = function nextToken() {
     if (this.pos >= this.source.length) {
       return Token.END;
@@ -208,11 +139,6 @@ var TokenReader = /*#__PURE__*/function () {
       var temp = this.strToToken.get(this.curTag);
       this.curToken = temp === undefined ? Token.CODE : temp;
       this.pos += this.curTag.length;
-
-      if (this.curToken === Token.IMG) {
-        this.parseImg();
-      }
-
       return this.curToken;
     }
 
@@ -229,6 +155,8 @@ var TokenReader = /*#__PURE__*/function () {
         sb.push('&amp;');
       } else if (ch === '\\' && this.pos < this.source.length && (this.test('*') || this.test('_'))) {
         sb.push(this.source.charAt(this.pos++));
+      } else if (ch === '\n') {
+        sb.push('<br>');
       } else {
         sb.push(ch);
       }
@@ -298,36 +226,6 @@ var Paragraph = /*#__PURE__*/function () {
   return Paragraph;
 }();
 
-var Header = /*#__PURE__*/function () {
-  function Header(elements, hLevel) {
-    this.hLevel = hLevel;
-    this.elements = _construct(Array, elements);
-  }
-
-  var _proto = Header.prototype;
-
-  _proto.toHtml = function toHtml(st) {
-    st.push("<h" + this.hLevel + ">");
-
-    for (var _iterator = _createForOfIteratorHelperLoose(this.elements), _step; !(_step = _iterator()).done;) {
-      var elem = _step.value;
-      elem.toHtml(st);
-    }
-
-    st.push("</h" + this.hLevel + ">");
-  };
-
-  _proto.toMarkdown = function toMarkdown(st) {
-    throw st;
-  };
-
-  _proto.toText = function toText(st) {
-    st.push("");
-  };
-
-  return Header;
-}();
-
 var Text = /*#__PURE__*/function () {
   function Text(text) {
     this.text = text;
@@ -351,7 +249,9 @@ var Text = /*#__PURE__*/function () {
 }();
 
 var BlockMarkableItem = /*#__PURE__*/function () {
-  function BlockMarkableItem(elements) {
+  function BlockMarkableItem(elements, closed) {
+    this.closed = true;
+    this.closed = !!closed;
     this.elements = _construct(Array, elements);
   }
 
@@ -368,7 +268,12 @@ var BlockMarkableItem = /*#__PURE__*/function () {
     st.push(end);
   };
 
-  _proto.toHtmlSuper = function toHtmlSuper(start, end, st) {
+  _proto.toHtmlSuper = function toHtmlSuper(start, end, st, startOnly) {
+    if (!this.closed) {
+      start = startOnly;
+      end = '';
+    }
+
     st.push(start);
 
     for (var _iterator2 = _createForOfIteratorHelperLoose(this.elements), _step2; !(_step2 = _iterator2()).done;) {
@@ -392,18 +297,18 @@ var BlockMarkableItem = /*#__PURE__*/function () {
 var Strikeout = /*#__PURE__*/function (_BlockMarkableItem) {
   _inheritsLoose(Strikeout, _BlockMarkableItem);
 
-  function Strikeout(elements) {
-    return _BlockMarkableItem.call(this, elements) || this;
+  function Strikeout(elements, closed) {
+    return _BlockMarkableItem.call(this, elements, closed) || this;
   }
 
   var _proto = Strikeout.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<s>', '</s>', st);
+    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<s>', '</s>', st, "~~");
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
-    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '~', '~', st);
+    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '~~', '~~', st);
   };
 
   return Strikeout;
@@ -412,18 +317,18 @@ var Strikeout = /*#__PURE__*/function (_BlockMarkableItem) {
 var Strong = /*#__PURE__*/function (_BlockMarkableItem) {
   _inheritsLoose(Strong, _BlockMarkableItem);
 
-  function Strong(elements) {
-    return _BlockMarkableItem.call(this, elements) || this;
+  function Strong(elements, closed) {
+    return _BlockMarkableItem.call(this, elements, closed) || this;
   }
 
   var _proto = Strong.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<strong>', '</strong>', st);
+    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<strong>', '</strong>', st, "**");
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
-    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '__', '__', st);
+    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '**', '**', st);
   };
 
   return Strong;
@@ -432,18 +337,18 @@ var Strong = /*#__PURE__*/function (_BlockMarkableItem) {
 var Emphasis = /*#__PURE__*/function (_BlockMarkableItem) {
   _inheritsLoose(Emphasis, _BlockMarkableItem);
 
-  function Emphasis(elements) {
-    return _BlockMarkableItem.call(this, elements) || this;
+  function Emphasis(elements, closed) {
+    return _BlockMarkableItem.call(this, elements, closed) || this;
   }
 
   var _proto = Emphasis.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<em>', '</em>', st);
+    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<em>', '</em>', st, '__');
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
-    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '*', '*', st);
+    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '__', '__', st);
   };
 
   return Emphasis;
@@ -452,18 +357,18 @@ var Emphasis = /*#__PURE__*/function (_BlockMarkableItem) {
 var Code = /*#__PURE__*/function (_BlockMarkableItem) {
   _inheritsLoose(Code, _BlockMarkableItem);
 
-  function Code(elements) {
-    return _BlockMarkableItem.call(this, elements) || this;
+  function Code(elements, closed) {
+    return _BlockMarkableItem.call(this, elements, closed) || this;
   }
 
   var _proto = Code.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<code>', '</code>', st);
+    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<code>', '</code>', st, '```');
   };
 
   _proto.toMarkdown = function toMarkdown(st) {
-    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '`', '`', st);
+    _BlockMarkableItem.prototype.toMarkdownSuper.call(this, '```', '```', st);
   };
 
   return Code;
@@ -478,15 +383,13 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     _this = _BaseParser.call(this) || this;
     _this.curElem = '';
     _this.curLine = '';
-    _this.headerStarts = ['###### ', '##### ', '#### ', '### ', '## ', '# '];
-    _this.hLevel = 0;
     _this.thrownError = false;
     _this.isHeaderRequired = false;
-    _this.isImageRequired = false;
-    _this.sourceStr = _this.replaceHtmlSpecials(data.trim());
-    _this.isImageRequired = !!isImageRequired;
+    _this.isLinkRequired = false;
+    _this.isLinkRequired = !!isImageRequired;
     _this.isHeaderRequired = !!isHeaderRequired;
-    _this.source = data.trim().split('\n');
+    _this.source = [data.trim()];
+    console.log("data", [data]);
     return _this;
   }
 
@@ -515,44 +418,29 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
   _proto.parseToHtml = function parseToHtml() {
     var res = this.parse();
     var html = [];
-    var text = [];
 
     for (var _iterator2 = _createForOfIteratorHelperLoose(res), _step2; !(_step2 = _iterator2()).done;) {
       var elem = _step2.value;
-      elem.toText(text);
       elem.toHtml(html);
     }
 
-    var htmlStr = html.join('');
-    var mdStr = this.sourceStr;
-    var textStr = text.join('');
-
-    if (textStr === '') {
-      return mdStr;
-    } else {
-      return htmlStr;
-    }
+    return html.join('');
   };
 
   _proto.parse = function parse() {
     var ans = new Array();
 
     while (this.nextElement()) {
-      if (this.isParagraph()) {
-        this.tr = new TokenReader(this.curElem, this.isImageRequired);
-        this.nextToken();
-        ans.push(new Paragraph(this.parseItems()));
-      } else {
-        this.tr = new TokenReader(this.curElem.substring(this.hLevel + 1), this.isImageRequired);
-        this.nextToken();
-        ans.push(new Header(this.parseItems(), this.hLevel));
-      }
+      this.tr = new TokenReader(this.curElem);
+      this.nextToken();
+      ans.push(new Paragraph(this.parseItems()));
     }
 
+    console.log("ans:", ans);
     return ans;
   };
 
-  _proto.isText = function isText(token) {
+  MdParser.isText = function isText(token) {
     return token === Token.TEXT;
   };
 
@@ -560,11 +448,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     var ans = new Array();
 
     while (this.curToken !== Token.END) {
-      if (this.isText(this.curToken)) {
+      if (MdParser.isText(this.curToken)) {
         ans.push(new Text(this.curStringToken));
-        this.nextToken();
-      } else if (this.curToken === Token.IMG) {
-        ans.push(this.tr.getImg());
         this.nextToken();
       } else {
         var start = this.curToken;
@@ -580,11 +465,8 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     var ans = new Array();
 
     while (this.curToken !== Token.END && this.curToken !== start) {
-      if (this.isText(this.curToken)) {
+      if (MdParser.isText(this.curToken)) {
         ans.push(new Text(this.curStringToken));
-        this.nextToken();
-      } else if (this.curToken === Token.IMG) {
-        ans.push(this.tr.getImg());
         this.nextToken();
       } else {
         var st = this.curToken;
@@ -595,95 +477,39 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
 
     if (this.curToken === start) {
       this.nextToken();
-      return this.create(ans, start);
-    } else if (start === Token.EMPHASIS || start === Token._EMPHASIS) {
-      var temp = new Array();
-      temp.push(new Text(this.tokenToString(start)));
-      temp.push.apply(temp, ans);
-      this.nextToken();
-      return temp;
+      return this.create(ans, start, true);
     } else {
-      this.thrownError = true;
-      return [];
+      this.nextToken();
+      return this.create(ans, start, false);
     }
   };
 
-  _proto.tokenToString = function tokenToString(token) {
+  _proto.create = function create(ans, token, closed) {
     switch (token) {
       case Token.STRIKEOUT:
         {
-          return '--';
+          return [new Strikeout(ans, closed)];
         }
 
       case Token.STRONG:
         {
-          return '**';
-        }
-
-      case Token.__STRONG:
-        {
-          return '__';
+          return [new Strong(ans, closed)];
         }
 
       case Token.EMPHASIS:
         {
-          return '*';
-        }
-
-      case Token._EMPHASIS:
-        {
-          return '_';
+          return [new Emphasis(ans, closed)];
         }
 
       case Token.CODE:
         {
-          return '`';
+          return [new Code(ans, closed)];
         }
 
       default:
         {
           this.thrownError = true;
-          return "";
-        }
-    }
-  };
-
-  _proto.create = function create(ans, token) {
-    switch (token) {
-      case Token.STRIKEOUT:
-        {
-          return [new Strikeout(ans)];
-        }
-
-      case Token.STRONG:
-        {
-          return [new Strong(ans)];
-        }
-
-      case Token.__STRONG:
-        {
-          return [new Strong(ans)];
-        }
-
-      case Token.EMPHASIS:
-        {
-          return [new Emphasis(ans)];
-        }
-
-      case Token._EMPHASIS:
-        {
-          return [new Emphasis(ans)];
-        }
-
-      case Token.CODE:
-        {
-          return [new Code(ans)];
-        }
-
-      default:
-        {
-          this.thrownError = true;
-          return [new Code(ans)];
+          return [new Code(ans, closed)];
         }
     }
   };
@@ -713,6 +539,7 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
       this.curLine = this.next();
     }
 
+    console.log(elem);
     this.curElem = elem.join('');
     return true;
   };
@@ -727,29 +554,12 @@ var MdParser = /*#__PURE__*/function (_BaseParser) {
     return null;
   };
 
-  _proto.isParagraph = function isParagraph() {
-    if (this.isHeaderRequired) {
-      for (var _iterator3 = _createForOfIteratorHelperLoose(this.headerStarts), _step3; !(_step3 = _iterator3()).done;) {
-        var headerStart = _step3.value;
-
-        if (this.curElem.startsWith(headerStart)) {
-          this.hLevel = headerStart.length - 1;
-          return false;
-        }
-      }
-    }
-
-    return true;
-  };
-
   return MdParser;
 }(BaseParser);
 
 exports.BlockMarkableItem = BlockMarkableItem;
 exports.Code = Code;
 exports.Emphasis = Emphasis;
-exports.Header = Header;
-exports.Image = Image;
 exports.MdParser = MdParser;
 exports.Paragraph = Paragraph;
 exports.Strikeout = Strikeout;
