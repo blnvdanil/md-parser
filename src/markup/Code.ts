@@ -8,7 +8,18 @@ export class Code extends BlockMarkableItem {
   }
 
   toHtml(st: Array<string>): void {
-    super.toHtmlSuper('<pre>', '</pre>', st, '```');
+    const arr: Array<string> = [];
+    super.toHtmlSuper('', '', arr, '```');
+    let res = arr.join('');
+    if (this.closed) {
+      if (res.length > 0 && res[0] === '\n') {
+        res = res.slice(1);
+      }
+      if (res.length > 0 && res[res.length - 1] === '\n') {
+        res = res.slice(0, res.length - 1);
+      }
+    }
+    st.push('<pre>' + res + '</pre>')
   }
 
   toMarkdown(st: Array<string>): void {

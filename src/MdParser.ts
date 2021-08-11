@@ -26,7 +26,6 @@ export class MdParser extends BaseParser {
     this.isLinkRequired = !!isImageRequired;
     this.isHeaderRequired = !!isHeaderRequired;
     this.source = [data];
-    console.log("data", [data])
   }
 
   replaceHtmlSpecials(data: string): string {
@@ -61,7 +60,6 @@ export class MdParser extends BaseParser {
       this.nextToken();
       ans.push(new Paragraph(this.parseItems()));
     }
-    console.log("ans:", ans)
     return ans;
   }
 
@@ -146,7 +144,6 @@ export class MdParser extends BaseParser {
       elem.push(this.curLine);
       this.curLine = this.next();
     }
-    console.log(elem);
     this.curElem = elem.join('');
     return true;
   }
