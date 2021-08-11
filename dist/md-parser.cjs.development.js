@@ -364,7 +364,7 @@ var Code = /*#__PURE__*/function (_BlockMarkableItem) {
   var _proto = Code.prototype;
 
   _proto.toHtml = function toHtml(st) {
-    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<code>', '</code>', st, '```');
+    _BlockMarkableItem.prototype.toHtmlSuper.call(this, '<pre>', '</pre>', st, '```');
   };
 
   _proto.toMarkdown = function toMarkdown(st) {

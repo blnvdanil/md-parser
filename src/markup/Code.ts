@@ -8,7 +8,7 @@ export class Code extends BlockMarkableItem {
   }
 
   toHtml(st: Array<string>): void {
-    super.toHtmlSuper('<code>', '</code>', st, '```');
+    super.toHtmlSuper('<pre>', '</pre>', st, '```');
   }
 
   toMarkdown(st: Array<string>): void {
